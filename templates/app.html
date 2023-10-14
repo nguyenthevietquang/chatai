@@ -1,0 +1,546 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatAI</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.1.1/js/bootstrap.min.js"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            font-family: "Poppins", sans-serif;
+        }
+
+        .main {
+            width: 100%;
+            background-color: #fff;
+        }
+
+        .side-navbar {
+            position: fixed;
+            height: 100vh;
+            width: 260px;
+            background: #460044;
+            overflow: hidden;
+            transition: 0.5s ease;
+        }
+
+        .side-navbar ul {
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .side-navbar ul li {
+            width: 100%;
+        }
+
+        .side-navbar ul li a {
+            display: flex;
+            align-items: center;
+            line-height: 60px;
+            height: 60px;
+            white-space: nowrap;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .side-navbar ul li a .icon {
+            min-width: 60px;
+            display: block;
+            text-align: center;
+            font-size: 25px;
+            color: #fff;
+            transition: transform 0.3s;
+        }
+
+        .side-navbar.active ul li a .icon {
+            justify-content: center;
+        }
+
+        .side-navbar ul li a:hover {
+            background: #8b0084;
+        }
+
+        .side-navbar ul li:first-child {
+            margin-bottom: 1rem;
+            background: none;
+        }
+
+        .side-navbar ul li a .text {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 10px;
+            line-height: 60px;
+            height: 60px;
+            white-space: nowrap;
+        }
+
+        .side-navbar ul li a .chat-name {
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+            text-transform: uppercase;
+        }
+
+        .side-navbar ul li a .icon-left {
+            margin-right: 10px;
+        }
+
+        .side-navbar ul li a .icon-right {
+            margin-left: 10px;
+        }
+
+        .content {
+            position: absolute;
+            width: calc(100% - 260px);
+            left: 260px;
+            min-height: 100vh;
+            transition: 0.5s ease;
+        }
+
+        .top-navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 20px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+        }
+
+        .profile img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #menu-icon {
+            font-size: 34px;
+            cursor: pointer;
+        }
+
+        .content.active {
+            width: calc(100% - 60px);
+            left: 60px;
+        }
+
+        .side-navbar.active {
+            width: 60px;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100%;
+        }
+
+        .form-control {
+            width: 100%;
+            max-width: 400px;
+            padding: 10px;
+            font-size: 16px;
+            border: none;
+            border-radius: 6px;
+            background-color: #f8f8f8;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+            margin-bottom: 10px;
+            outline: none;       
+        }
+
+        .form-control::placeholder {
+            color: #a9a9a9;
+            opacity: 0.8;
+            font-size: 18px; /* Adjust the font size as desired */
+        }
+
+        .form-control:focus {
+            background-color: #fff;
+        }
+
+        .btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #460044;
+            color: #fff;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background-color: #8b0084;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 600px;
+            margin-top: 20px;
+            padding: 20px;
+            background-color: #f8f8f8;
+            border-radius: 6px;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+        }
+
+        .chat-message {
+            margin-bottom: 10px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid #ccc;
+        }
+
+        .chat-message .question {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .chat-message .answer {
+            color: #555;
+        }
+
+        .chat-list {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column-reverse; /* Reverse the order of chat names */
+        }
+
+        .chat-list .chat-item {
+            cursor: pointer;
+            padding: 10px;
+            background-color: #460044;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            text-align: center; /* Center the text */
+            color: #fff; /* Text color */
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .chat-list .chat-item:hover {
+            background-color: #8b0084;
+        }
+
+        .chat-list .chat-item .icon {
+            font-size: 18px;
+            margin-right: 5px;
+        }
+
+        .chat-list .chat-item .edit-icon {
+            font-size: 14px;
+            cursor: pointer;
+            margin-left: 10px; /* Adjust the margin as needed */
+        }
+
+        .chat-list .chat-item .delete-icon {
+            font-size: 14px;
+            cursor: pointer;
+            margin-right: 10px; /* Adjust the margin as needed */
+        }
+
+        .chat-list .chat-item.active-chat {
+            background-color: #8b0084;
+        }
+
+        .new-chat {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            background-color: #460044;
+            border-radius: 6px;
+            margin-bottom: 5px;
+            cursor: pointer;
+            justify-content: center; /* Center the text */
+            transition: background-color 0.3s;
+        }
+
+        .new-chat:hover {
+            background-color: #8b0084;
+        }
+
+        .new-chat .icon {
+            font-size: 20px;
+            margin-right: 10px;
+            color: #fff;
+        }
+
+        .new-chat .text {
+            font-weight: bold;
+            font-size: 16px;
+            color: #fff;
+        }
+
+        .sider-navbar.active .chat-name-element .chat-item,
+        .sider-navbar.active .chat-list .chat-item,
+        .side-navbar.active .new-chat .text {
+            display: none;
+        }
+        
+        .logout {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 13px;
+            background-color: #460044;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+
+        .logout:hover {
+            background-color: #8b0084;
+        }
+
+        .logout .icon {
+            font-size: 24px;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        .logout .text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+        
+    </style>
+</head>
+
+<body>
+    <div class="main">
+        <div class="side-navbar">
+            <ul>
+                <li>
+                    <a>
+                        <span class="icon"><i class='bx bxs-dashboard'></i></span>
+                        <span class="text"><h2>ChatAI</h2></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html">
+                        <span class="icon"><i class='bx bxs-home-circle'></i></span>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="app.html">
+                        <span class="icon"><i class='bx bxs-message-rounded-detail'></i></span>
+                        <span class="text">App</span>
+                    </a>
+                </li>>                
+            </ul>
+            <div id="chat-list" class="chat-list"></div>
+            <div class="new-chat" onclick="newChat()">
+                <span class="icon" id="new-chat-icon"><i class='bx bxs-message-square-add'></i></span>
+                <span class="text">New Chat</span>
+            </div>
+            <div class="logout" id = ".logout"> 
+                <a href="#" onclick="logout()">
+                    <span class="icon"><i class='bx bx-log-out'></i></span>
+                    <span class="text" id = "log-out">Log Out</span>
+                </a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="top-navbar">
+                <div class="bx bx-menu" id="menu-icon" onclick="toggleSideNavbar()"></div>
+            </div>
+            <div class="container">
+                <form id="chat-form" onsubmit="submitQuestion(event)">
+                    <input class="form-control mt-4" type="text" id="question-input" placeholder="Enter your question"
+                        required>
+                    <button class="btn btn-primary mt-4" type="submit">Ask</button>
+                </form>
+                <div id="chat-container" class="chat-container"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let menu = document.querySelector('#menu-icon');
+        let sidenavbar = document.querySelector('.side-navbar');
+        let content = document.querySelector('.content');
+        let chatContainer = document.querySelector('#chat-container');
+        let chatForm = document.querySelector('#chat-form');
+        let chatList = document.querySelector('#chat-list');
+        let isSideNavbarActive = false;
+
+        function toggleSideNavbar() {
+            isSideNavbarActive = !isSideNavbarActive;
+
+            if (isSideNavbarActive) {
+                sidenavbar.classList.add('active');
+                content.classList.add('active');
+                document.getElementById('new-chat-icon').style.display = 'none';
+                document.getElementById('chat-name-element').style.display = 'none';
+                document.getElementById('chat-list').style.display = 'none';
+                document.getElementById('.logout').style.display = 'none';
+
+
+            } else {
+                sidenavbar.classList.remove('active');
+                content.classList.remove('active');
+                document.getElementById('new-chat-icon').style.display = 'block';
+                document.getElementById('chat-name-element').style.display = 'flex';
+                document.getElementById('chat-list').style.display = 'flex'
+                document.getElementById('.logout').style.display = 'block';
+
+            }
+        }
+
+        // Generate a dynamic chat name
+        function generateChatName(chatNumber) {
+            return `Chat ${chatNumber}`;
+        }
+
+        // Define the function to create a new chat
+        function createNewChat() {
+            const chatNumber = chatSessions.length + 1;
+            const chatName = generateChatName(chatNumber);
+            chatSessions.push({
+                chatName,
+                chatHistory: []
+            });
+            currentChat = chatSessions.length - 1;
+            loadChat(currentChat);
+        }
+
+        // Update the chat list with the chat names
+        function updateChatList() {
+            chatList.innerHTML = '';
+            chatSessions.forEach((chat, index) => {
+                let deleteIcon = '';
+                let editIcon = '';
+
+                deleteIcon = `<span class="delete-icon icon-right" id="delete-icon" onclick="deleteChat(${index})"><i class='bx bx-trash'></i></span>`;
+                editIcon = `<span class="edit-icon icon-left" id="edit-icon" onclick="editChat(${index})"><i class='bx bx-edit'></i></span>`;
+                const activeClass = index === currentChat ? 'active-chat' : '';
+
+                const chatItemHtml = `
+                    <div class="chat-item ${activeClass}" id = "chat-name-element" onclick="loadChat(${index})">
+                        ${editIcon}
+                        <span class="text chat-name" >${chat.chatName}</span>
+                        ${deleteIcon}
+                    </div>`;
+                chatList.innerHTML += chatItemHtml;
+            });
+        }
+
+        let chatSessions = [{
+            chatName: generateChatName(1),
+            chatHistory: []
+        }];
+
+        let currentChat = 0;
+
+        function deleteChat(index) {
+            chatSessions.splice(index, 1);
+            if (currentChat >= chatSessions.length) {
+                currentChat = chatSessions.length - 1;
+            }
+            loadChat(currentChat);
+        }
+
+        function editChat(index) {
+            const newName = prompt('Enter the new chat name:');
+            if (newName) {
+                chatSessions[index].chatName = newName;
+                updateChatList();
+            }
+        }
+
+        function loadChat(index) {
+            currentChat = index;
+            chatContainer.innerHTML = '';
+            chatSessions[index].chatHistory.forEach((message) => {
+                const messageHtml = `<div class="chat-message"><div class="question">${message.sender}:</div><div class="answer">${message.text}</div></div>`;
+                chatContainer.innerHTML += messageHtml;
+            });
+            updateChatList();
+            chatList.style.display = 'flex'; 
+            
+        }
+
+        function newChat() {
+            const chatNumber = chatSessions.length + 1;
+            const chatName = generateChatName(chatNumber);
+            chatSessions.push({
+                chatName,
+                chatHistory: []
+            });
+            currentChat = chatSessions.length - 1;
+            loadChat(currentChat);
+
+            // Show the chat list
+            chatList.style.display = 'flex';
+        }
+
+        function submitQuestion(event) {
+            event.preventDefault();
+            const date = new Date();
+            const hour = date.getHours();
+            const minute = date.getMinutes();
+            const str_time = hour + ":" + minute;
+            var rawText = $("#question-input").val();
+
+            $("#question-input").val("");
+
+            // Append the user's question
+            var userQuestionHtml = `<div class="chat-message"><div class="question">You:</div><div class="answer">${rawText}</div></div>`;
+            chatContainer.innerHTML += userQuestionHtml;
+
+            // Process the question and generate a response
+            $.ajax({
+                data: {
+                    msg: rawText,
+                },
+                type: "POST",
+                url: "/get",
+            }).done(function (data) {
+                // Append the ChatAI's answer
+                var botAnswerHtml = `<div class="chat-message"><div class="question">ChatAI:</div><div class="answer">${data}</div></div>`;
+                chatContainer.innerHTML += botAnswerHtml;
+
+                // Store the messages in the current chat session
+                chatSessions[currentChat].chatHistory.push({
+                    sender: 'You',
+                    text: rawText
+                });
+                chatSessions[currentChat].chatHistory.push({
+                    sender: 'ChatAI',
+                    text: data
+                });
+
+                updateChatList();
+            });
+        }
+
+        // Load the initial chat
+        loadChat(currentChat);
+
+        function logout() {
+            window.location.href = "/logout";
+        }
+
+    </script>
+</body>
+
+</html>

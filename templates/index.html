@@ -1,0 +1,269 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ChatAI</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap">
+    <link rel="stylesheet" href="https://unpkg.com/boxicons@latest/css/boxicons.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            list-style: none;
+            text-decoration: none;
+            font-family: "Poppins", sans-serif;
+        }
+
+        body {
+            background-color: #f8f8f8;
+        }
+
+        .main {
+            display: flex;
+        }
+
+        .side-navbar {
+            position: fixed;
+            height: 100vh;
+            width: 260px;
+            background: #460044;
+            overflow: hidden;
+            transition: 0.5s ease;
+        }
+
+        .side-navbar ul {
+            top: 0;
+            left: 0;
+            width: 100%;
+        }
+
+        .side-navbar ul li {
+            width: 100%;
+        }
+
+        .side-navbar ul li:hover {
+            background: #8b0084;
+        }
+
+        .side-navbar ul li:first-child {
+            margin-bottom: 1rem;
+            background: none;
+        }
+
+        .side-navbar ul li a {
+            display: block;
+            width: 100%;
+            display: flex;
+            color: #fff;
+        }
+
+        .side-navbar ul li a .icon {
+            min-width: 60px;
+            display: block;
+            font-size: 25px;
+            line-height: 60px;
+            height: 60px;
+            text-align: center;
+        }
+
+        .side-navbar ul li a .text {
+            display: block;
+            padding: 0 10px;
+            line-height: 60px;
+            height: 60px;
+            white-space: nowrap;
+        }
+
+        .content {
+            flex: 1;
+            margin-left: 260px;
+            min-height: 100vh;
+            transition: 0.5s ease;
+        }
+
+        .top-navbar {
+            width: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 7px 20px;
+            background-color: #fff;
+            box-shadow: 0 2px 4px rgb(0 0 0 / 10%);
+        }
+
+        .profile img {
+            width: 44px;
+            height: 44px;
+            object-fit: contain;
+            object-position: center;
+            border-radius: 50%;
+            cursor: pointer;
+        }
+
+        #menu-icon {
+            font-size: 34px;
+            cursor: pointer;
+        }
+
+        .content.active {
+            margin-left: 60px;
+        }
+
+        .side-navbar.active {
+            width: 60px;
+        }
+
+        .center {
+            text-align: center;
+            margin: 0 auto;
+            padding: 40px;
+            max-width: 800px;
+        }
+
+        .center h1 {
+            font-size: 28px;
+            margin-bottom: 20px;
+            color: #460044;
+            line-height: 1.4;
+            text-align: center;
+        }
+
+        .center p {
+            font-size: 18px;
+            color: #555;
+            margin-bottom: 10px;
+            line-height: 1.6;
+            text-align: left;
+        }
+
+        .decorative-icons {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-bottom: 40px;
+        }
+
+        .decorative-icons i {
+            font-size: 48px;
+            margin: 10px;
+            color: #8b0084;
+        }
+
+        .additional-decor {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin-top: 40px;
+        }
+
+        .additional-decor i {
+            font-size: 64px;
+            margin: 10px;
+            color: #460044;
+        }
+
+        .logout {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            padding: 15px 20px;
+            background-color: #460044;
+            transition: background-color 0.3s;
+            text-align: center;
+        }
+
+        .logout:hover {
+            background-color: #8b0084;
+        }
+
+        .logout .icon {
+            font-size: 24px;
+            color: #fff;
+            margin-right: 10px;
+        }
+
+        .logout .text {
+            font-size: 18px;
+            font-weight: bold;
+            color: #fff;
+        }
+
+    </style>
+</head>
+<body>
+    <div class="main">
+        <div class="side-navbar">
+            <ul>
+                <li>
+                    <a>
+                        <span class="icon"><i class='bx bxs-dashboard'></i></span>
+                        <span class="text"><h2>ChatAI</h2></span>
+                    </a>
+                </li>
+                <li>
+                    <a href="index.html">
+                        <span class="icon"><i class='bx bxs-home-circle'></i></span>
+                        <span class="text">Dashboard</span>
+                    </a>
+                </li>
+                <li>
+                    <a href="app.html">
+                        <span class="icon"><i class='bx bxs-message-rounded-detail'></i></span>
+                        <span class="text">App</span>
+                    </a>
+                </li>
+            </ul>
+            <div class="logout"> 
+                <a href="#" onclick="logout()">
+                    <span class="icon"><i class='bx bx-log-out'></i></span>
+                    <span class="text" id = "log-out">Log Out</span>
+                </a>
+            </div>
+        </div>
+        <div class="content">
+            <div class="top-navbar">
+                <div class="bx bx-menu" id="menu-icon"></div>
+            </div>
+            <div class="center">
+                <h1>Introduction to ChatAI</h1>
+                <div class="decorative-icons">
+                    <i class="bx bxs-rocket icon-decor"></i>
+                    <i class="bx bxs-bulb icon-decor large"></i>
+                    <i class="bx bxs-like icon-decor extra-large"></i>
+                </div>
+                <p>Welcome to ChatAI, your intelligent virtual assistant! Our advanced AI chatbot is designed to revolutionize your browsing experience on our website. With state-of-the-art artificial intelligence technology, ChatAI offers a wide range of features and capabilities to assist you in numerous ways.</p>
+                <p>Experience the convenience of having a virtual assistant at your disposal. ChatAI is here to answer your questions, provide support, and offer personalized recommendations tailored to your needs. From guiding you through our website's features and services to helping you find the information you seek, ChatAI is always ready to assist.</p>
+                <p>Powered by cutting-edge natural language processing (NLP) algorithms, ChatAI can understand and interpret your queries accurately. It continuously learns and adapts from user interactions, ensuring that its responses are increasingly accurate and helpful over time.</p>
+                <p>Discover the versatility of ChatAI as it effortlessly handles various tasks. Whether you need to make reservations, get product information, or receive real-time updates on events and promotions, ChatAI has got you covered. Its intelligence and adaptability make it an invaluable tool for enhancing customer experiences and streamlining operations.</p>
+                <p>Embrace the power of AI and unlock a world of convenience with ChatAI. Engage in natural language conversations, explore our website effortlessly, and access a wealth of information and assistance seamlessly. Get ready to embark on an interactive and personalized journey with ChatAI as your trusted virtual assistant!</p>
+
+                <div class="additional-decor">
+                    <i class="bx bxs-heart icon-decor extra-large"></i>
+                    <i class="bx bxs-crown icon-decor large"></i>
+                    <i class="bx bxs-diamond icon-decor"></i>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let menu = document.querySelector('#menu-icon');
+        let sidenavbar = document.querySelector('.side-navbar');
+        let content = document.querySelector('.content');
+        
+        menu.onclick = () => {
+            sidenavbar.classList.toggle('active');
+            content.classList.toggle('active');
+        }
+
+        function logout() {
+            window.location.href = "/logout";
+        }
+    </script>
+
+</body>
+</html>
