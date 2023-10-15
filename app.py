@@ -48,20 +48,16 @@ def signup():
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Hash the password before storing it
         hashed_password = generate_password_hash(password, method='sha256')
 
-        # Check if the username is already taken
         if User.query.filter_by(username=username).first():
             flash("Username already exists. Please choose another username.", "error")
         else:
-            # Create a new user and add it to the database
             new_user = User(username=username, password=hashed_password)
             db.session.add(new_user)
             try:
                 db.session.commit()
                 flash("Account created successfully. Please log in.", "success")
-                # Redirect to the login page after successful signup
                 return redirect(url_for('login'))
             except IntegrityError:
                 db.session.rollback()
@@ -70,26 +66,23 @@ def signup():
     return render_template("signup.html")
 
 
-# Login route
 @app.route("/login", methods=["GET", "POST"])
 def login():
     if request.method == "POST":
         username = request.form.get("username")
         password = request.form.get("password")
 
-        # Find the user in the database
         user = User.query.filter_by(username=username).first()
 
         if user and check_password_hash(user.password, password):
             flash("Login successful.", "success")
-            # You can add session management here if needed
             return redirect(url_for('dashboard'))
         else:
             flash("Invalid username or password. Please try again.", "error")
 
     return render_template("login.html")
 
-# Logout route (unchanged)
+# Logout route 
 @app.route("/logout")
 def logout():
     session.clear()

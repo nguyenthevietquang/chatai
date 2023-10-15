@@ -170,7 +170,7 @@
         .form-control::placeholder {
             color: #a9a9a9;
             opacity: 0.8;
-            font-size: 18px; /* Adjust the font size as desired */
+            font-size: 18px; 
         }
 
         .form-control:focus {
@@ -223,7 +223,7 @@
             overflow-y: auto;
             margin-bottom: 20px;
             display: flex;
-            flex-direction: column-reverse; /* Reverse the order of chat names */
+            flex-direction: column-reverse; 
         }
 
         .chat-list .chat-item {
@@ -232,8 +232,8 @@
             background-color: #460044;
             border-radius: 6px;
             margin-bottom: 5px;
-            text-align: center; /* Center the text */
-            color: #fff; /* Text color */
+            text-align: center; 
+            color: #fff; 
             transition: background-color 0.3s;
             display: flex;
             align-items: center;
@@ -252,13 +252,13 @@
         .chat-list .chat-item .edit-icon {
             font-size: 14px;
             cursor: pointer;
-            margin-left: 10px; /* Adjust the margin as needed */
+            margin-left: 10px; 
         }
 
         .chat-list .chat-item .delete-icon {
             font-size: 14px;
             cursor: pointer;
-            margin-right: 10px; /* Adjust the margin as needed */
+            margin-right: 10px;
         }
 
         .chat-list .chat-item.active-chat {
@@ -273,7 +273,7 @@
             border-radius: 6px;
             margin-bottom: 5px;
             cursor: pointer;
-            justify-content: center; /* Center the text */
+            justify-content: center; 
             transition: background-color 0.3s;
         }
 
@@ -433,12 +433,10 @@
             }
         }
 
-        // Generate a dynamic chat name
         function generateChatName(chatNumber) {
             return `Chat ${chatNumber}`;
         }
 
-        // Define the function to create a new chat
         function createNewChat() {
             const chatNumber = chatSessions.length + 1;
             const chatName = generateChatName(chatNumber);
@@ -450,7 +448,6 @@
             loadChat(currentChat);
         }
 
-        // Update the chat list with the chat names
         function updateChatList() {
             chatList.innerHTML = '';
             chatSessions.forEach((chat, index) => {
@@ -516,7 +513,6 @@
             currentChat = chatSessions.length - 1;
             loadChat(currentChat);
 
-            // Show the chat list
             chatList.style.display = 'flex';
         }
         function scrollToBottom() {
@@ -532,13 +528,11 @@
 
             $("#question-input").val("");
 
-            // Append the user's question
             var userQuestionHtml = `<div class="chat-message"><div class="question">You:</div><div class="answer">${rawText}</div></div>`;
             chatContainer.innerHTML += userQuestionHtml;
             
             scrollToBottom();
 
-            // Process the question and generate a response
             $.ajax({
                 data: {
                     msg: rawText,
@@ -547,13 +541,11 @@
                 url: "/get",
             }).done(function (data) {
                 
-                // Append the ChatAI's answer
                 var botAnswerHtml = `<div class="chat-message"><div class="question">ChatAI:</div><div class="answer">${data}</div></div>`;
                 chatContainer.innerHTML += botAnswerHtml;
 
                 scrollToBottom();
 
-                // Store the messages in the current chat session
                 chatSessions[currentChat].chatHistory.push({
                     sender: 'You',
                     text: rawText
@@ -567,7 +559,6 @@
             });
         }
 
-        // Load the initial chat
         loadChat(currentChat);
 
         function logout() {
